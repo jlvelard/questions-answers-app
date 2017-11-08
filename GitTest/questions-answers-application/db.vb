@@ -1,8 +1,10 @@
-﻿Public Class db
+﻿Imports System.Data.SqlClient
+
+Public Class db
     ' login to database server
     Protected connection As New SqlConnection With {.ConnectionString = "Server=essql1.walton.uark.edu;Database=isys4283-2017fa;Trusted_Connection=yes;"}
     ' prepare a query
-    Protected command As New SqlCommand With {.connection = connection}
+    Protected command As New SqlCommand With {.Connection = connection}
 
     ' set and get sql command
     Public Property sql() As String
@@ -14,6 +16,11 @@
             command.CommandText = value
         End Set
     End Property
+
+    ' bind sql parameters
+    Public Sub bind(ByVal parameter As String, ByRef value As Object)
+        command.Parameters.AddWithValue(parameter, value)
+    End Sub
 
     ' populate a data grid view
     Public Sub fill(ByRef dgv As DataGridView)
@@ -39,14 +46,11 @@
         End Try
     End Sub
 
-
-    ' execute dml statement
+    ' execute a DML statement
     Public Sub execute()
-
         Try
             connection.Open()
             command.ExecuteNonQuery()
-
         Catch ex As Exception
             MsgBox(ex.Message)
             Throw ex
@@ -56,5 +60,7 @@
             End If
         End Try
     End Sub
-End Class
 
+
+
+End Class
